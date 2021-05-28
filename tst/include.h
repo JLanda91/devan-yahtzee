@@ -1,0 +1,12 @@
+//
+// Created by JLANDA91 on 21/05/2021.
+//
+
+#ifndef DEVAN_YAHTZEE_INCLUDE_H
+#define DEVAN_YAHTZEE_INCLUDE_H
+
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include <doctest.h>
+
+
+#endif //DEVAN_YAHTZEE_INCLUDE_H
