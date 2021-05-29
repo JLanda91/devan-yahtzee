@@ -6,7 +6,6 @@
 #define DEVAN_YAHTZEE_ROLL_H
 
 #include <iostream>
-//#include <stringstream>
 #include <array>
 #include <algorithm>
 #include <numeric>
@@ -48,16 +47,28 @@ namespace devan_yahtzee::objects{
 			}
 		}
 
+		[[nodiscard]] constexpr roll_int at(size_t pos) const {
+			try{
+				return dice.at(pos);
+			} catch(std::out_of_range& e) {
+				throw roll_position_out_of_range("Index " + std::to_string(pos) + " out of allowable range 0..5");
+			}
+		}
+
 	public:
 		constexpr Roll() = default;
 
 		constexpr Roll(const Roll& r) = default;
 
 		constexpr Roll(const Roll& r, size_t pos) : Roll(r) {
-			setDie(pos, at(pos)+1);
+			die(pos, at(pos)+1);
 		}
 
-		constexpr void setDie(size_t pos, roll_int new_f) {
+		constexpr roll_int die(size_t pos) const {
+			return at(pos);
+		}
+
+		constexpr void die(size_t pos, roll_int new_f) {
 			roll_int& die = at(pos);
 			one_norm += new_f - die;
 			if(one_norm > 5)
@@ -69,23 +80,19 @@ namespace devan_yahtzee::objects{
 			die = new_f;
 		}
 
-		[[nodiscard]] constexpr roll_int oneNorm() const noexcept{
+		constexpr roll_int oneNorm() const noexcept{
 			return one_norm;
 		}
 
-		[[nodiscard]] constexpr roll_int twoNorm() const noexcept{
+		constexpr roll_int twoNorm() const noexcept{
 			return two_norm;
 		}
 
-		[[nodiscard]] constexpr roll_int infNorm() const noexcept{
+		constexpr roll_int infNorm() const noexcept{
 			return inf_norm;
 		}
 
-		[[nodiscard]] constexpr roll_int die(size_t pos) {
-			return at(pos);
-		}
-
-		[[nodiscard]] std::string toString() const noexcept {
+		std::string toString() const noexcept {
 			std::ostringstream oss{};
 			oss << '[';
 			std::for_each(dice.cbegin(), dice.cend(),[&oss](const roll_int& ri){
@@ -93,6 +100,10 @@ namespace devan_yahtzee::objects{
 			});
 			oss << ']';
 			return oss.str();
+		}
+
+		constexpr bool operator==(const Roll& r) const noexcept {
+			return dice == r.dice;
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const Roll& r) noexcept {
