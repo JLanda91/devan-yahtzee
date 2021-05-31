@@ -1,6 +1,10 @@
-#include <iostream>
+//
+// Created by JLANDA91 on 31/05/2021.
+//
 
-#include "include.h"
+#ifndef DEVAN_YAHTZEE_ROLL_TESTS_H
+#define DEVAN_YAHTZEE_ROLL_TESTS_H
+
 #include "../src/objects/roll.h"
 
 using devan_yahtzee::objects::Roll;
@@ -8,7 +12,7 @@ using devan_yahtzee::objects::roll_position_out_of_range;
 using devan_yahtzee::objects::roll_infeasible_error;
 
 inline void require_roll_members(const Roll& r, const std::array<roll_int,6>& dice, const roll_int oneNorm,
-							   const roll_int twoNorm, const roll_int infNorm, const char* repr){
+								 const roll_int twoNorm, const roll_int infNorm, const char* repr){
 	// Compare dice
 	for(size_t i=0;i<6;i++)
 		REQUIRE_EQ(r.die(i), dice[i]);
@@ -29,7 +33,7 @@ SCENARIO("Roll Methods"){
 
 		THEN("Default members are initialized correctly") {
 			require_roll_members(r1, {0, 0, 0, 0, 0, 0},
-								 0, 0, 0, "[000000]");
+0, 0, 0, "[000000]");
 		}
 
 		THEN("Getting the frequency of a dice number not 1 through 6 throws roll_position_out_of_range error") {
@@ -63,8 +67,8 @@ SCENARIO("Roll Methods"){
 			r1.die(3, 1);
 
 			THEN("Dice, norms and string rep must change accordingly") {
-				require_roll_members(r1, {2, 0, 0, 1, 0, 1},
-									 4, 6, 2, "[200101]");
+			require_roll_members(r1, {2, 0, 0, 1, 0, 1},
+			4, 6, 2, "[200101]");
 			}
 
 			WHEN("Copying altered roll (cctor) into a new roll r2"){
@@ -84,7 +88,7 @@ SCENARIO("Roll Methods"){
 
 				THEN("Dice, norms and string rep must change accordingly") {
 					require_roll_members(r2, {2, 0, 0, 2, 0, 1},
-										 5, 9, 2, "[200201]");
+				5, 9, 2, "[200201]");
 				}
 
 				THEN("Rolling a die too many dice (> 5) on r2 throws roll_infeasible_error"){
@@ -103,9 +107,10 @@ SCENARIO("Roll Methods"){
 				Roll r3{r1,4};
 				INFO("Roll r3 = ", r3);
 
-				THEN("Dice, norms and string rep must change accordingly")
-				require_roll_members(r3, {2,0,0,1,1,1},
+				THEN("Dice, norms and string rep must change accordingly"){
+					require_roll_members(r3, {2,0,0,1,1,1},
 									 5, 7, 2, "[200111]");
+				}
 
 				THEN("Setting too many dice (> 5) on r3 throws roll_infeasible_error"){
 					// Trying set the total amount of dice over 5.
@@ -117,7 +122,12 @@ SCENARIO("Roll Methods"){
 					REQUIRE_THROWS_AS(r3.die(5, 2), const roll_infeasible_error&);
 				}
 			}
-
 		}
 	}
 }
+
+SCENARIO("Dummy"){
+REQUIRE_EQ(1,1);
+}
+
+#endif //DEVAN_YAHTZEE_ROLL_TESTS_H

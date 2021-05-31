@@ -3,4 +3,4 @@
 
 #set(CMAKE_CXX_STANDARD 20)
 
-add_executable(doctests roll_tests.cpp include.h)
+add_executable(all-tests main.cpp roll_tests.h)
