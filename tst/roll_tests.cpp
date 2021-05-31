@@ -23,7 +23,7 @@ inline void require_roll_members(const Roll& r, const std::array<roll_int,6>& di
 }
 
 SCENARIO("Roll Methods"){
-	WHEN("Creating the zero-roll r1 with the default ctor"){
+	GIVEN("The zero-roll r1 (default ctor)"){
 		Roll r1{};
 		INFO("Roll r1 = ",r1);
 
@@ -74,10 +74,6 @@ SCENARIO("Roll Methods"){
 				THEN("r1 must equal r2"){
 					// Check equality for members after copy ctor";
 					REQUIRE_EQ(r1, r2);
-
-					REQUIRE_EQ(r1.oneNorm(), r2.oneNorm());
-					REQUIRE_EQ(r1.twoNorm(), r2.twoNorm());
-					REQUIRE_EQ(r1.infNorm(), r2.infNorm());
 				}
 			}
 

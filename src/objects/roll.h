@@ -1,9 +1,5 @@
-//
-// Created by JLANDA91 on 19/05/2021.
-//
-
-#ifndef DEVAN_YAHTZEE_ROLL_H
-#define DEVAN_YAHTZEE_ROLL_H
+#ifndef DEVAN_YAHTZEE_OBJECTS_ROLL_H
+#define DEVAN_YAHTZEE_OBJECTS_ROLL_H
 
 #include <iostream>
 #include <array>
@@ -12,7 +8,9 @@
 #include <cstdint>
 #include <initializer_list>
 
-#ifdef DEVAN_YAHTZEE_ROLL_PRIMITIVE_CHAR
+#include "../exceptions/roll.h"
+
+#ifdef DEVAN_YAHTZEE_ROLL_UINT8_PRIMITIVE
 	using roll_int = uint8_t;
 
 	std::ostream& operator<<(std::ostream& os, const uint8_t& x){
@@ -25,17 +23,12 @@
 
 namespace devan_yahtzee::objects{
 
-	using dice_array = std::array<roll_int,6>;
-
-	struct roll_position_out_of_range : public std::out_of_range{
-		explicit roll_position_out_of_range(const std::string& arg) : std::out_of_range(arg) {};
-	};
-
-	struct roll_infeasible_error : public std::range_error{
-		explicit roll_infeasible_error(const std::string& arg) : std::range_error(arg) {};
-	};
+	using devan_yahtzee::exceptions::roll_position_out_of_range;
+	using devan_yahtzee::exceptions::roll_infeasible_error;
 
 	class Roll {
+		using dice_array = std::array<roll_int,6>;
+
 		dice_array dice;
 		roll_int one_norm, two_norm, inf_norm;
 
@@ -113,4 +106,4 @@ namespace devan_yahtzee::objects{
 	};
 }
 
-#endif //DEVAN_YAHTZEE_ROLL_H
+#endif //DEVAN_YAHTZEE_OBJECTS_ROLL_H
