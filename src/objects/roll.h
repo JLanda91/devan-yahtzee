@@ -11,14 +11,10 @@
 #include "../exceptions/roll.h"
 
 #ifdef DEVAN_YAHTZEE_ROLL_UINT8_PRIMITIVE
-	using roll_int = uint8_t;
-
-	std::ostream& operator<<(std::ostream& os, const uint8_t& x){
-		os << (unsigned)x;
-		return os;
-	}
+#include "../util/char_unsigned_print.h"
+using roll_int = uint8_t;
 #else
-	using roll_int = unsigned;
+using roll_int = unsigned;
 #endif
 
 namespace devan_yahtzee::objects{
