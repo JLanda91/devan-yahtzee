@@ -63,11 +63,12 @@ namespace devan_yahtzee::objects{
 
 		constexpr void die(size_t pos, roll_int new_f) {
 			roll_int& die = at(pos);
-			one_norm += new_f - die;
-			if(one_norm > 5)
+			roll_int incr = new_f - die;
+			if(one_norm + incr > 5)
 				throw roll_infeasible_error("Setting die " + std::to_string(pos) + " of roll " + toString() + " to "
 											+ std::to_string(new_f) + " results in a roll with " + std::to_string(one_norm)
 											+ " dice (max 5 allowed)");
+			one_norm += incr;
 			two_norm += (new_f - die) * (new_f + die);
 			inf_norm  = std::max(new_f, inf_norm);
 			die = new_f;

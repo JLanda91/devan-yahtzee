@@ -95,6 +95,11 @@ SCENARIO("Roll Methods"){
 					REQUIRE_THROWS_AS(r2.die(3, 3), const roll_infeasible_error&);
 					REQUIRE_THROWS_AS(r2.die(4, 1), const roll_infeasible_error&);
 					REQUIRE_THROWS_AS(r2.die(5, 2), const roll_infeasible_error&);
+
+					AND_THEN("Members are left unchanged"){
+						require_roll_members(r2, {2, 0, 0, 2, 0, 1},
+											 5, 9, 2, "[200201]");
+					}
 				}
 			}
 
@@ -115,6 +120,11 @@ SCENARIO("Roll Methods"){
 					REQUIRE_THROWS_AS(r3.die(3, 2), const roll_infeasible_error&);
 					REQUIRE_THROWS_AS(r3.die(4, 2), const roll_infeasible_error&);
 					REQUIRE_THROWS_AS(r3.die(5, 2), const roll_infeasible_error&);
+
+					AND_THEN("Members are left unchanged"){
+						require_roll_members(r3, {2,0,0,1,1,1},
+											 5, 7, 2, "[200111]");
+					}
 				}
 			}
 
