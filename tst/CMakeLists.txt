@@ -3,4 +3,4 @@
 
 #set(CMAKE_CXX_STANDARD 20)
 
-add_executable(doctests roll_tests.cpp include.h)
+add_executable(roll-tests roll_tests.cpp include.h ../src/util/char_unsigned_print.h)
