@@ -32,21 +32,21 @@ SCENARIO("Roll Methods"){
 								 0, 0, 0, "[000000]");
 		}
 
-		THEN("Getting the frequency of a dice number not 1 through 6 throws roll_position_out_of_range error") {
+		AND_THEN("Getting the frequency of a dice number not 1 through 6 throws roll_position_out_of_range error") {
 			// Trying to get the amount of 7s, 8s and 9s
 			REQUIRE_THROWS_AS(r1.die(6), const roll_position_out_of_range&);
 			REQUIRE_THROWS_AS(r1.die(7), const roll_position_out_of_range&);
 			REQUIRE_THROWS_AS(r1.die(8), const roll_position_out_of_range&);
 		}
 
-		THEN("Setting the frequency of a dice number not 1 through 6 throws roll_position_out_of_range error"){
+		AND_THEN("Setting the frequency of a dice number not 1 through 6 throws roll_position_out_of_range error"){
 			// Trying to set the amount of 7s, 8s and 9s
 			REQUIRE_THROWS_AS(r1.die(6, 0), const roll_position_out_of_range&);
 			REQUIRE_THROWS_AS(r1.die(7, 0), const roll_position_out_of_range&);
 			REQUIRE_THROWS_AS(r1.die(8, 0), const roll_position_out_of_range&);
 		}
 
-		THEN("Rolling six extra dice on the zero roll throws roll_infeasible_error"){
+		AND_THEN("Rolling six extra dice on the zero roll throws roll_infeasible_error"){
 			// Trying to roll six extra 1s, 2s or 3s.
 			REQUIRE_THROWS_AS(r1.die(0, 6), const roll_infeasible_error&);
 			REQUIRE_THROWS_AS(r1.die(1, 6), const roll_infeasible_error&);
@@ -77,7 +77,7 @@ SCENARIO("Roll Methods"){
 				}
 			}
 
-			WHEN("Increment-copying an altered roll r2"){
+			AND_WHEN("Increment-copying an altered roll r2"){
 				// Validly ncrementing [200101] at position 3. Expecting [200201]
 				Roll r2{r1,3};
 				INFO("Roll r2 = ", r2);
@@ -87,7 +87,7 @@ SCENARIO("Roll Methods"){
 										 5, 9, 2, "[200201]");
 				}
 
-				THEN("Rolling a die too many dice (> 5) on r2 throws roll_infeasible_error"){
+				AND_THEN("Rolling a die too many dice (> 5) on r2 throws roll_infeasible_error"){
 					// Trying set the total amount of dice over 5.
 					REQUIRE_THROWS_AS(r2.die(0, 3), const roll_infeasible_error&);
 					REQUIRE_THROWS_AS(r2.die(1, 1), const roll_infeasible_error&);
@@ -103,7 +103,7 @@ SCENARIO("Roll Methods"){
 				}
 			}
 
-			WHEN("Increment-copying an altered roll r3"){
+			AND_WHEN("Increment-copying an altered roll r3"){
 				// Validly ncrementing [200101] at position 4. Expecting [200111]
 				Roll r3{r1,4};
 				INFO("Roll r3 = ", r3);
@@ -112,7 +112,7 @@ SCENARIO("Roll Methods"){
 				require_roll_members(r3, {2,0,0,1,1,1},
 									 5, 7, 2, "[200111]");
 
-				THEN("Setting too many dice (> 5) on r3 throws roll_infeasible_error"){
+				AND_THEN("Setting too many dice (> 5) on r3 throws roll_infeasible_error"){
 					// Trying set the total amount of dice over 5.
 					REQUIRE_THROWS_AS(r3.die(0, 3), const roll_infeasible_error&);
 					REQUIRE_THROWS_AS(r3.die(1, 1), const roll_infeasible_error&);
