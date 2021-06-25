@@ -1,5 +1,5 @@
-#ifndef DEVAN_YAHTZEE_OBJECTS_ROLL_H
-#define DEVAN_YAHTZEE_OBJECTS_ROLL_H
+#ifndef DEVAN_YAHTZEE_STATE_OBJECTS_ROLL_H
+#define DEVAN_YAHTZEE_STATE_OBJECTS_ROLL_H
 
 #include <iostream>
 #include <array>
@@ -17,7 +17,7 @@ using roll_int = uint8_t;
 using roll_int = unsigned;
 #endif
 
-namespace devan_yahtzee::objects{
+namespace devan_yahtzee::state_objects{
 
 	using devan_yahtzee::exceptions::roll_position_out_of_range;
 	using devan_yahtzee::exceptions::roll_infeasible_error;
@@ -26,7 +26,7 @@ namespace devan_yahtzee::objects{
 		using dice_array = std::array<roll_int,6>;
 
 		dice_array dice;
-		roll_int one_norm, two_norm, inf_norm;
+		roll_int one_norm, two_norm, inf_norm, eye_total, incr_start;
 
 		[[nodiscard]] constexpr roll_int& at(size_t pos) {
 			try{
@@ -65,9 +65,15 @@ namespace devan_yahtzee::objects{
 											+ std::to_string(new_f) + " results in a roll with " + std::to_string(one_norm)
 											+ " dice (max 5 allowed)");
 			one_norm += incr;
-			two_norm += (new_f - die) * (new_f + die);
+			two_norm += incr * (new_f + die);
 			inf_norm  = std::max(new_f, inf_norm);
+			eye_total += (pos+1)*incr;
 			die = new_f;
+			if(pos > incr_start && new_f){
+				incr_start = pos;
+			}else if(pos == incr_start && !new_f){
+				incr_start = std::max(0l, 5 - (std::find_if(dice.rbegin()+6-pos, dice.rend(), [](const auto& x){return x>0;}) - dice.rbegin()));
+			}
 		}
 
 		constexpr roll_int oneNorm() const noexcept{
@@ -82,6 +88,18 @@ namespace devan_yahtzee::objects{
 			return inf_norm;
 		}
 
+		constexpr roll_int eyeTotal() const noexcept{
+			return eye_total;
+		}
+
+		constexpr roll_int incrStart() const noexcept{
+			return incr_start;
+		}
+
+		constexpr bool operator==(const Roll& r) const noexcept {
+			return dice == r.dice;
+		}
+
 		std::string toString() const noexcept {
 			std::ostringstream oss{};
 			oss << '[';
@@ -92,10 +110,6 @@ namespace devan_yahtzee::objects{
 			return oss.str();
 		}
 
-		constexpr bool operator==(const Roll& r) const noexcept {
-			return dice == r.dice;
-		}
-
 		friend std::ostream& operator<<(std::ostream& os, const Roll& r) noexcept {
 			os << r.toString();
 			return os;
@@ -103,4 +117,4 @@ namespace devan_yahtzee::objects{
 	};
 }
 
-#endif //DEVAN_YAHTZEE_OBJECTS_ROLL_H
+#endif //DEVAN_YAHTZEE_STATE_OBJECTS_ROLL_H

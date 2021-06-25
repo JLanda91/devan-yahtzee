@@ -1,14 +1,15 @@
 #include <iostream>
 
 #include "include.h"
-#include "../src/objects/roll.h"
+#include "../src/state_objects/roll.h"
 
-using devan_yahtzee::objects::Roll;
-using devan_yahtzee::objects::roll_position_out_of_range;
-using devan_yahtzee::objects::roll_infeasible_error;
+using devan_yahtzee::state_objects::Roll;
+using devan_yahtzee::state_objects::roll_position_out_of_range;
+using devan_yahtzee::state_objects::roll_infeasible_error;
 
 inline void require_roll_members(const Roll& r, const std::array<roll_int,6>& dice, const roll_int oneNorm,
-							   const roll_int twoNorm, const roll_int infNorm, const char* repr){
+							   const roll_int twoNorm, const roll_int infNorm, const roll_int incrStart,
+							   const char* repr){
 	// Compare dice
 	for(size_t i=0;i<6;i++)
 		REQUIRE_EQ(r.die(i), dice[i]);
@@ -17,6 +18,7 @@ inline void require_roll_members(const Roll& r, const std::array<roll_int,6>& di
 	REQUIRE_EQ(r.oneNorm(), oneNorm);
 	REQUIRE_EQ(r.twoNorm(), twoNorm);
 	REQUIRE_EQ(r.infNorm(), infNorm);
+	REQUIRE_EQ(r.incrStart(), incrStart);
 
 	// Comparing string representation
 	REQUIRE_EQ(r.toString(), repr);
@@ -29,7 +31,20 @@ SCENARIO("Roll Methods"){
 
 		THEN("Default members are initialized correctly") {
 			require_roll_members(r1, {0, 0, 0, 0, 0, 0},
-								 0, 0, 0, "[000000]");
+								 0, 0, 0, 0, "[000000]");
+		}
+
+		THEN("Changing some dice will move the incr_start"){
+			r1.die(2, 2);
+			REQUIRE_EQ(r1.incrStart(), 2);
+			r1.die(2, 1);
+			REQUIRE_EQ(r1.incrStart(), 2);
+			r1.die(4, 2);
+			REQUIRE_EQ(r1.incrStart(), 4);
+			r1.die(2, 0);
+			REQUIRE_EQ(r1.incrStart(), 4);
+			r1.die(4, 0);
+			REQUIRE_EQ(r1.incrStart(), 0);
 		}
 
 		THEN("Getting the frequency of a dice number not 1 through 6 throws roll_position_out_of_range error") {
@@ -63,8 +78,8 @@ SCENARIO("Roll Methods"){
 			r1.die(3, 1);
 
 			THEN("Dice, norms and string rep must change accordingly") {
-				require_roll_members(r1, {2, 0, 0, 1, 0, 1},
-									 4, 6, 2, "[200101]");
+				require_roll_members(r1, {2,0,0,1,0,1},
+									 4, 6, 2, 5, "[200101]");
 			}
 
 			WHEN("Copying altered roll (cctor) into a new roll r2"){
@@ -83,8 +98,8 @@ SCENARIO("Roll Methods"){
 				INFO("Roll r2 = ", r2);
 
 				THEN("Dice, norms and string rep must change accordingly") {
-					require_roll_members(r2, {2, 0, 0, 2, 0, 1},
-										 5, 9, 2, "[200201]");
+					require_roll_members(r2, {2,0,0,2,0,1},
+										 5, 9, 2, 5, "[200201]");
 				}
 
 				THEN("Rolling a die too many dice (> 5) on r2 throws roll_infeasible_error"){
@@ -97,8 +112,8 @@ SCENARIO("Roll Methods"){
 					REQUIRE_THROWS_AS(r2.die(5, 2), const roll_infeasible_error&);
 
 					AND_THEN("Members are left unchanged"){
-						require_roll_members(r2, {2, 0, 0, 2, 0, 1},
-											 5, 9, 2, "[200201]");
+						require_roll_members(r2, {2,0,0,2,0,1},
+											 5, 9, 2, 5, "[200201]");
 					}
 				}
 			}
@@ -110,7 +125,7 @@ SCENARIO("Roll Methods"){
 
 				THEN("Dice, norms and string rep must change accordingly")
 				require_roll_members(r3, {2,0,0,1,1,1},
-									 5, 7, 2, "[200111]");
+									 5, 7, 2, 5,  "[200111]");
 
 				THEN("Setting too many dice (> 5) on r3 throws roll_infeasible_error"){
 					// Trying set the total amount of dice over 5.
@@ -123,7 +138,7 @@ SCENARIO("Roll Methods"){
 
 					AND_THEN("Members are left unchanged"){
 						require_roll_members(r3, {2,0,0,1,1,1},
-											 5, 7, 2, "[200111]");
+											 5, 7, 2, 5, "[200111]");
 					}
 				}
 			}
